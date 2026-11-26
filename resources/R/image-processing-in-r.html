@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marco Gandolfo - Image processing in R</title>
+<meta name="description" content="Marco Gandolfo, Postdoc in Visual Cognitive Neuroscience. Donders Institute for Brain, Cognition and Behaviour, Radboud University of Nijmegen, NL.">
+<link rel="icon" type="image/png" href="../../images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&amp;family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,700&amp;family=Source+Code+Pro:wght@400;600&amp;display=swap">
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<div class="announce">
+  <span>Behavioral and causal evidence for object-based scene recognition in visual cortex (2026)</span>
+  <a class="btn" href="https://doi.org/10.64898/2026.06.29.735096">Preprint</a>
+</div>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="../../index.html"><img src="../../images/logo.png" alt="" width="30" height="30">Marco Gandolfo</a>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Open menu">
+    <label for="nav-toggle" class="nav-toggle-label" aria-hidden="true"><span></span></label>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+<li><a href="../../index.html">Home</a></li>
+<li><a href="../../news.html">News</a></li>
+<li><a href="../../publications.html">Publications</a></li>
+<li><a href="../../cv.html">CV</a></li>
+<li class="has-sub"><a href="../../resources/index.html" class="current">Resources</a>
+  <ul class="sub">
+    <li><a href="../../resources/makehuman.html">MakeHuman Scripting</a></li>
+    <li><a href="../../resources/R/index.html">R</a></li>
+    <li class="lvl2"><a href="../../resources/R/rtutorials.html">RTutorials</a></li>
+    <li class="lvl2"><a href="../../resources/R/r-functions-collection.html">R functions - collection</a></li>
+    <li class="lvl2"><a href="../../resources/R/sdt.html">Dprime and SDT</a></li>
+    <li class="lvl2"><a href="../../resources/R/outliers.html">Outliers</a></li>
+    <li class="lvl2"><a href="../../resources/R/image-processing-in-r.html">Image processing in R</a></li>
+    <li class="lvl2"><a href="../../resources/R/auroc2r-metacognitive-sensitivity.html">AUROC2R - Metacognitive Sensitivity</a></li>
+    <li class="lvl2"><a href="../../resources/R/visualise-fft-spectra.html">Visualise FFT spectra</a></li>
+    <li class="lvl2"><a href="../../resources/R/video-processing-in-r.html">Video Processing in R</a></li>
+    <li><a href="../../resources/basics-of-tms.html">Basics of TMS</a></li>
+    <li><a href="../../resources/stimuli.html">Stimuli</a></li>
+  </ul>
+</li>
+<li class="has-sub"><a href="../../online-experiments/index.html">Online Experiments</a>
+  <ul class="sub">
+    <li><a href="../../online-experiments/boundary-extension-and-depth-of-field.html">Boundary Extension and Depth of field</a></li>
+  </ul>
+</li>
+<li><a href="../../contact-me.html">Contact me</a></li>
+</ul>
+    </nav>
+  </div>
+</header>
+<div class="banner">
+  <h1>Image processing in R</h1>
+</div>
+<main id="main" class="content">
+<h2>Simple image processing steps using R</h2>
+<p><b>Have you ever found yourself doing a million of clicks when preparing your stimuli? </b></p>
+<p>In some cases you can solve this issue with few lines of code. In this post I want to do a little introduction on how to do basic image processing in R. There are 2 pretty well known C libraries that have been ported entirely in R. The package Imager (<a href="http://dahtah.github.io/imager/">Barthelme', 2018</a>) which is a porting of the C library <a href="https://cimg.eu/">CImg</a> (written in C++ by David Tschumperlé). The package <a href="https://cran.r-project.org/web/packages/magick/vignettes/intro.html">Magick</a> also ported from C++ by Jeroen Ooms.</p>
+<p>Both packages have a great range of functions for image processing and image statistics. Thanks to the imager functions cimg2magick() and magick2cimg() included in the imager package they are also highly compatible between each other and can easily benefit from the excellent functions of both packages with the same pool of images!</p>
+<p>Here I cannot do a full complete intro of these packages but I will introduce a few of these functions plus some basic way to import all the images in a folder and perform operations in loop to all of them. Note that many of the functions are well introduced in the packages documentation, here <a href="http://dahtah.github.io/imager/">Imager</a> and <a href="https://cran.r-project.org/web/packages/magick/vignettes/intro.html">Magick</a> . So the focus here would be to provide a basic guide to those that might need to learn few tips on how to loop operations in R over lists.</p>
+<pre><code class="language-r">#if you have never installed these packages before
+install.packages("imager")
+install.packages("magick")
+
+#load the packages in R
+library(imager)
+library(magick)</code></pre>
+<p>Now Packages are loaded. Say we want to load all the images from the folder /Documents/Images</p>
+<pre><code class="language-r">imgpath &lt;- "/Documents/Images" #define a variable with the image path
+
+imgfiles &lt;- list.files(imgpath, full.names = TRUE, pattern = "jpg") #list all the img files in img path
+
+imgnames &lt;- list.files(imgpath, pattern = "jpg") #without full names gets only the img title.
+
+#read the images in the folder with imager and store it into a variable
+imgList &lt;- imager::load.dir(imgpath)
+
+#read the images in the folder with magick
+imglist &lt;- list() # define empty list
+
+for(img in seq_along(imgfiles)) {
+imglist[[img]] &lt;- magick::image_read(imgfiles[[img]])
+}</code></pre>
+<p>Ok let's take a little break to comment this. The imager package has already a function that would load all the directory  (load.dir), pretty handy! </p>
+<p>The Magick package, to my knowledge, does not. So for the first time we are asked to loop and read one image at a time to store it into a list.</p>
+<p>In both cases a folder with images in R will be loaded as a <b>list</b>. If you are not familiar with R objects this is more complex than a vector, of course, and more complex than a dataframe. A list can contain as many objects that we want. Within a list there can be other dataframes or even list of dataframes. Lists are indexed in R as you can see above with the double squared bracket! I normally work with gray scaled images which are two dimensional but potentially an image list could contain a full folder with coloured images where the structure is more complex!</p>
+<p>Now that you have a list of images in you are in power! you can do whatever you like with those images as if you were working on a single one. Let's grayscale them all in one go.</p>
+<pre><code class="language-r">imggraylist &lt;- list()
+
+for (img in seq_along(imglist)) {
+imggraylist[[img]] &lt;- imager::grayscale(imglist[[img]],method = "XYZ")
+#or the same thing with magick
+imggraylist[[img]] &lt;- magick::image_convert(imglist[[img]], colorspace = "gray")
+}</code></pre>
+<p>Nice, you now have a list of grayscaled images!!!  Note that this is for demonstration purposes with both packages. If you run the code the way it is you will end up having only the imggraylist created with magick because it will be overwritten! So pick one of them!</p>
+<p>Now you might want to export all these nice grayscaled images:</p>
+<pre><code class="language-r">for (img in seq_along(imggraylist)) {
+# Do it with Imager
+imager::save.image(as.cimg(imggraylist[[img]]), paste0(imgpath, "gray_",imgnames[[img]]), quality = 0.75)
+# or Magick
+magick::image_write(imggraylist[[img]], paste0(imgpath, "gray_",imgnames[[img]]), quality = 75)
+}</code></pre>
+<p>You can see here that both functions get as a first argument the image you need to write and as a second argument the path. I use paste 0 to concatenate the file path in imgpath with the prefix "gray_" and the imgname for each image. As a third argument there is the quality. In imager is from 0 to 1 while in magick is from 0 to 100! </p>
+<p>You could export the images in another format, just be careful to the names! because at the moment the imgnames contains the extension.</p>
+<p>The two packages overlap for basics of image processing. However, they differ greatly for other aspects not covered here. Nicely, the package imager has 2 functions that enable quick and easy conversion between the two image classes within R:</p>
+<p><i>cimg2magick : </i>To convert an imager class to magick</p>
+<p><i>magick2cimg: </i>To convert a magick class image to cimg</p>
+<p>So in the case you need to use the function of one after having worked with the other you can easily use these to change the image class in most cases!</p>
+
+<h3>Make Everything faster using <i>lapply </i>rather than <i>for loops</i></h3>
+<p>To me for loops are the clearer way to show what you are doing but the code can get quite verbose and hard to read. Further, if you have a very large amount of images, they can be very slow, particularly using <i>Imager</i>. There are several solutions for speeding up looped operations. One that is very easy is to use the functions from the <i>apply </i>family from base R to loop through your lists. This will make everything noticeably faster. Honestly I didn't bother doing it for a long time thinking that the difference would have been barely noticeable... However that is not the case. So if you have a large image list this is definitely the way to go. An example below using <i>Imager </i> with <i>lapply </i>:</p>
+<pre><code class="language-r">imglist &lt;- imager::load.dir("path/myimages/")
+
+doimproc &lt;- function(x){
+  grayscale(x, method = "XYZ")
+  imager::resize_halfXY(x)
+}
+
+sttime &lt;- Sys.time() #start the clock
+
+proclist &lt;- lapply(imglist, doimproc) #apply function to the imglist and store it in proclist
+
+entime &lt;- Sys.time() #stop the clock
+
+print(entime - sttime)</code></pre>
+<p><i>Lapply </i>takes as arguments: the list you want to loop the operations on, and the function you want to <i>apply</i> to the elements of such list. Here this function has been user-defined. It does not do anything special, it simply combines to other functions from imager. That is grayscale and resize half. In one go I grayscaled and resized all the images in one folder. You can have some "fun" benchmarking how quick are the operations with lapply vs the for loops. I added a clock above as an example..</p>
+
+<h3>Flip horizontally all the images in a folder and export them in another folder</h3>
+<p>Here is a small example of how you could make your image processing efficient by building functions yourself.</p>
+<p>In this case I built a little function to flip all the images in a folder and export them into another. This help if you want to do this operation in several folders to avoid a billion loops and to make sure to not overload with too many images the RAM of your computer.</p>
+<pre><code class="language-r">flip_images &lt;- function(importpath, exportpath, imgformat = "jpg"){
+  ## this function will flip all the images in an importpath (string), and export them in a
+  ## exportpath (string). You also include the imgformat. It defaults to JPEG but could also insert png.
+  ## for example: flip_images("stimuli/imgs_to_flip", "stimuli/imgs_flipped", format = "png").
+  ## allstrings
+
+  if (!require('magick')) install.packages('magick'); library('magick')
+  if (!require('purrr')) install.packages('purrr'); library('purrr')
+
+  ### get the filepaths
+  filelist &lt;- list.files(importpath, pattern = ".jpg|.png", full.names = TRUE)
+print(filelist);
+
+  ## get the basenames of these paths
+  thenames &lt;- basename(filelist)
+
+
+  ## read the images
+  imlist &lt;- map(filelist, image_read)
+  print("IMAGE LIST IS LOADED")
+
+  ## flip the images
+  fl_imlist &lt;- map(imlist, image_flop)
+  print("IMAGE LIST IS FLIPPED, prepare to write imgs")
+
+  ## remove the list of the nonflipped imgs
+  rm(imlist)
+
+
+  ## export all the images to the destinationpath
+  for(img in seq_along(fl_imlist)){
+    image_write(fl_imlist[[img]], paste0(exportpath, "/", thenames[img]), quality = 100, format = imgformat)
+  }
+
+  rm(fl_imlist)
+}</code></pre>
+<p>You can download this function here: <a href="https://github.com/marco2gandolfo/rcourse/blob/main/flip_images.R">https://github.com/marco2gandolfo/rcourse/blob/main/flip_images.R</a> or copy paste it in your R environment and save it as a function. To use it remember to either run it or use the function <code>source("yourpath/flip_images.R") </code> to have it available in your R space.</p>
+
+<h3>Shift an object position within a plain background image without flipping :)</h3>
+<figure><img src="../../images/improc-shift-object.png" alt="Example of an object shifted to the mirrored position without flipping" loading="lazy"></figure>
+<p>This function performs canny edge detection on an object - then detect the bounding box of such edges and cuts out the object. It then places the object in the specular position on the X or Y axis without flipping the object.</p>
+<p>To optimise speed you can comment the section where the plotting is performed. </p>
+<p><i><b>Below you can see the code related to this function followed by an example on how to implement it to a group of images</b></i></p>
+<pre><code class="language-r">shiftobj &lt;- function(img, alphaval = 0.1, theaxis = "x", thebgcol = c(0.5,0.5,0.5)){
+  ## this function will use cannyedge det. to detect a main object on a pretty flat background
+  ## then create a bounding box surrounding it - chopping it off and put it in the corresponding
+  ## position on the other side of the square, without flipping
+  ## alphaval: is a number between 0 and 1 indicating the tolerance of the edge detector - default is low thresh (0.1)
+  ## imager pick the best guessed one by it.
+  ## theaxis: string is the axis on which you want to flip the object around - x or y - defaults to x
+  ## thebgcolor - defualt is "gray" but can be some other color in string or
+  ## on a 3 0 to 1 RGB vector e.g. c(0.5, 0.5, 0.5) == "gray"
+
+  if (!require('imager')) install.packages('imager'); library('imager')
+  if (!require('dplyr')) install.packages('dplyr'); library('dplyr')
+
+  ### get the filepaths
+  # img is an imager object - loaded with load.image
+  plot(img)
+  # apply threshold and a bit of blur
+  thimg &lt;- cannyEdges(grayscale(img), alpha = alphaval)
+  #plot(thimg)
+
+  # clean it up a bit
+  thimg2 &lt;- imager::fill(thimg, 30) %&gt;% imager::clean(3)
+  rm(thimg) # remove the previous img
+
+  # try to plot the final threshold to check how it looks
+  # comment this for performance
+  #plot(thimg2)
+
+  # identify the bounding box of the thresholded object
+  thebox &lt;- bbox(thimg2)
+  #plot(mirror(thebox, axis = theaxis))
+
+  ## crop the box from the actual coloured img
+  theobj &lt;- crop.bbox(img, thimg2)
+  #plot(theobj)
+  ## find the coordinates of the top left corner of the box of the thresholded
+  ## img - not that the image is flipped horizontally - default axis is x
+  sqcord &lt;- as.data.frame(as.cimg(mirror(thebox, axis = theaxis))) %&gt;%
+              filter(value &gt; 0) %&gt;%
+              dplyr::group_by(value) %&gt;%
+              dplyr::summarise(mx=min(x),my=min(y))
+
+  ## fill back the image with the flipped square with the gray color (default)
+  ## can also be a 3d vector with 3 values between 0 and 1 RGB
+  grfill &lt;- imfill(dim = dim(mirror(as.cimg(thebox), axis = theaxis)), val = thebgcol)
+
+  ## bring together the images
+  flimg &lt;- imdraw(grfill, theobj, x = sqcord$mx, y = sqcord$my)
+  plot(flimg)
+
+  rm(theobj)
+
+  return(flimg)
+}</code></pre>
+<p>You can download this function from github - <a href="https://github.com/marco2gandolfo/rcourse/blob/main/shiftobj.R">https://github.com/marco2gandolfo/rcourse/blob/main/shiftobj.R</a></p>
+<p>Here a short example on how you can use it on a list of images using iteration from the Purrr package (part of tidyverse).</p>
+<pre><code class="language-r">library(tidyverse)
+
+flnames &lt;- list.files(pattern = ".png", recursive = TRUE, full.names =  TRUE)
+
+imlist &lt;- map(flnames, load.image)
+
+shobjlist &lt;- map(imlist, shiftobj)</code></pre>
+
+<h3>Scramble an object image and add a nice grid to it of a desired pixel size</h3>
+<figure><img src="../../images/improc-grid-scramble.png" alt="Object images and their scrambled versions with a grid" loading="lazy"></figure>
+<p>This function will grayscale and scramble an object image adding a grid to it where the scrambled blocks, of a desired size, can fit.</p>
+<p>Note that the function requests an import and exportpath - importpath is a folder with 1 or more images, export path is an empty folder where to export the images full and scrambled with their superimposed grid.</p>
+<p>Find the code below:</p>
+<pre><code class="language-r">gridandscramble &lt;- function(importpath, exportpath, gridsize = 10) {
+## this function will take an object image on a white background, grayscale it, scramble it
+## after, it will add a grid of a desired block size (default is 10) to the object as often used in fMRI paradigms
+## to localise LOC.
+if (!require('imager')) install.packages('imager'); library('imager')
+if (!require('purrr')) install.packages('purrr'); library('purrr')
+if (!require('magick')) install.packages('magick'); library('magick')
+
+## define scrambling function - from imager package creator barthelme' - with the possibility to edit the blocksize
+scramble &lt;- function(im,axis="x", blocksize = -1)
+{
+  imsplit(im,axis, nb = blocksize) %&gt;% { .[sample(length(.))] } %&gt;% imappend(axis)
+}
+# read the image names
+imfiles &lt;- list.files(importpath, pattern = ".jpg|.png", full.names = TRUE, recursive = FALSE)
+# print names
+print(imfiles)
+
+# read the images
+theobjs &lt;- map(imfiles, image_read)
+print("IMAGE LIST IS LOADED")
+
+# grayscale images
+grims &lt;- map(theobjs, ~image_convert(., colorspace = "gray"))
+
+# convert in cimg for scrambling
+grimsimgr &lt;- map(grims, magick2cimg)
+
+# scramble
+scrlist &lt;- map(grimsimgr, ~scramble(., blocksize = gridsize) %&gt;%
+                 scramble(axis = "y", blocksize = gridsize) %&gt;%
+                 scramble(blocksize = gridsize) %&gt;%
+                 scramble(axis = "y", blocksize = gridsize))
+
+# convert back to magick format
+scrimgs &lt;- map(scrlist, cimg2magick)
+print("IMAGE LIST IS SCRAMBLED")
+
+# remove the cimg list and clean ram
+rm(scrlist) %&gt;% gc()
+
+# add borders to both lists
+bdgrims &lt;- map(grims, ~image_border(., color = "black", geometry = "1x1"))
+bdscrimgs &lt;- map(scrimgs, ~image_border(., color = "black", geometry = "1x1"))
+
+# pick up the names
+imnames &lt;- basename(imfiles)
+
+# make the new paths
+newnames_full &lt;- paste0(exportpath, "/", imnames)
+newnames_scr &lt;- paste0(exportpath, "/scr_", imnames)
+
+## add grid to the full cue images
+for(img in seq_along(imnames)) {
+  theimg &lt;- image_draw(bdgrims[[img]])
+  grid(nx = gridsize, ny = gridsize, lty = "solid", col = "black")
+  dev.off()
+  image_write(theimg, newnames_full[[img]],quality = 100)
+}
+print("IMAGE GRID ADDED TO FULL IMGS")
+
+## add grid to the scrambled images
+for(img in seq_along(imnames)) {
+  theimg &lt;- image_draw(bdscrimgs[[img]])
+  grid(nx = gridsize, ny = gridsize, lty = "solid", col = "black")
+  dev.off()
+  image_write(theimg, newnames_scr[[img]],quality = 100)
+}
+print("IMAGE GRID ADDED TO SCRAMBLED IMGS")
+}</code></pre>
+<p>You can find the function here on github ready to copy into R - <a href="https://github.com/marco2gandolfo/rcourse/blob/main/gridandscramble.R">https://github.com/marco2gandolfo/rcourse/blob/main/gridandscramble.R</a></p>
+
+<h3>Put an image on the center of a squared canvas of desired size and color </h3>
+<figure><img src="../../images/improc-canvas.png" alt="Images placed at the centre of square canvases" loading="lazy"></figure>
+<p>This function will place an image to the center of a squared canvas of a desired size and color. By default the canvas will be a square with each side as big as the largest found in the image. The image borders above are shown for illustratory purposes.</p>
+<p>Find the code below:</p>
+<pre><code class="language-r">resizecanvas &lt;- function(im, bgcolor = "white", impos = "center", resize = FALSE, sqsize = 400) {
+  # the function will take an image and paste it on the center of a square (by default) or on the left/right/top/bottom.
+  # by default (if resize is false) the square is as wide as the widest side of the given image.
+  # im is an image read in image magic using image_read.
+  # bg color is the color of the canvas where we are placing the image, white by default
+  # impos relates to the position of the image on the canvas
+  # resize if TRUE performs resizing of a given sqsize in pixels
+  # sqsize size of the square in pixels - if you want it to be different from the longest side of the input image.
+
+  if (!require('purrr')) install.packages('purrr'); library('purrr')
+  if (!require('magick')) install.packages('magick'); library('magick')
+  if (!require('dplyr')) install.packages('dplyr'); library('dplyr')
+
+  # extract image information
+  iminfo &lt;- image_info(im)
+  # figure whether image is portrait or landscape
+  iminfo &lt;- iminfo %&gt;% mutate(ratio = case_when(width &gt; height ~ "landscape",
+                                                TRUE ~ "portrait"))
+
+  # adjust canvas to be as big as the largest side
+  if(iminfo$ratio == "landscape") {
+    horsquare = iminfo$width
+    theimg &lt;- image_composite(image_blank(width = horsquare, height = horsquare, bgcolor), image_scale(im, paste0(horsquare, "x")), gravity = impos)
+  } else if (iminfo$ratio == "portrait") {
+    versquare = iminfo$height
+    theimg &lt;- image_composite(image_blank(width = versquare, height = versquare, bgcolor), image_scale(im,  paste0("x",versquare)), gravity = impos)
+  }
+
+  if(resize == TRUE){
+   thersimage &lt;- image_resize(theimg, geometry = paste0(sqsize, "x", sqsize))
+   return(thersimage)
+  } else {
+   return(theimg)
+  }
+}</code></pre>
+<p>You can find the function here on github ready to copy into R - <a href="https://github.com/marco2gandolfo/rcourse/blob/main/resizecanvas.R">https://github.com/marco2gandolfo/rcourse/blob/main/resizecanvas.R</a></p>
+</main>
+<footer class="site-footer">
+  <a href="../../index.html"><img src="../../images/logo.png" alt="" width="22" height="22">Marco Gandolfo</a>
+</footer>
+
+</body>
+</html>

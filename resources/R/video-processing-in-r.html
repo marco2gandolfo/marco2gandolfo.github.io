@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marco Gandolfo - Video Processing in R</title>
+<meta name="description" content="Marco Gandolfo, Postdoc in Visual Cognitive Neuroscience. Donders Institute for Brain, Cognition and Behaviour, Radboud University of Nijmegen, NL.">
+<link rel="icon" type="image/png" href="../../images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&amp;family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,700&amp;family=Source+Code+Pro:wght@400;600&amp;display=swap">
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<div class="announce">
+  <span>Behavioral and causal evidence for object-based scene recognition in visual cortex (2026)</span>
+  <a class="btn" href="https://doi.org/10.64898/2026.06.29.735096">Preprint</a>
+</div>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="../../index.html"><img src="../../images/logo.png" alt="" width="30" height="30">Marco Gandolfo</a>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Open menu">
+    <label for="nav-toggle" class="nav-toggle-label" aria-hidden="true"><span></span></label>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+<li><a href="../../index.html">Home</a></li>
+<li><a href="../../news.html">News</a></li>
+<li><a href="../../publications.html">Publications</a></li>
+<li><a href="../../cv.html">CV</a></li>
+<li class="has-sub"><a href="../../resources/index.html" class="current">Resources</a>
+  <ul class="sub">
+    <li><a href="../../resources/makehuman.html">MakeHuman Scripting</a></li>
+    <li><a href="../../resources/R/index.html">R</a></li>
+    <li class="lvl2"><a href="../../resources/R/rtutorials.html">RTutorials</a></li>
+    <li class="lvl2"><a href="../../resources/R/r-functions-collection.html">R functions - collection</a></li>
+    <li class="lvl2"><a href="../../resources/R/sdt.html">Dprime and SDT</a></li>
+    <li class="lvl2"><a href="../../resources/R/outliers.html">Outliers</a></li>
+    <li class="lvl2"><a href="../../resources/R/image-processing-in-r.html">Image processing in R</a></li>
+    <li class="lvl2"><a href="../../resources/R/auroc2r-metacognitive-sensitivity.html">AUROC2R - Metacognitive Sensitivity</a></li>
+    <li class="lvl2"><a href="../../resources/R/visualise-fft-spectra.html">Visualise FFT spectra</a></li>
+    <li class="lvl2"><a href="../../resources/R/video-processing-in-r.html">Video Processing in R</a></li>
+    <li><a href="../../resources/basics-of-tms.html">Basics of TMS</a></li>
+    <li><a href="../../resources/stimuli.html">Stimuli</a></li>
+  </ul>
+</li>
+<li class="has-sub"><a href="../../online-experiments/index.html">Online Experiments</a>
+  <ul class="sub">
+    <li><a href="../../online-experiments/boundary-extension-and-depth-of-field.html">Boundary Extension and Depth of field</a></li>
+  </ul>
+</li>
+<li><a href="../../contact-me.html">Contact me</a></li>
+</ul>
+    </nav>
+  </div>
+</header>
+<div class="banner">
+  <h1>Video Processing in R</h1>
+</div>
+<main id="main" class="content">
+<p>This is a short demonstration on how to manipulate a video with image magick in R - </p>
+<p>In this example you can reverse play one video. What this snippet of code will do is to read in the video as a sequence of frame by frame images in the format of a list - after, we will reverse the images in this list and export the video with its original frame rate. The end product will be a reverse played video! :) Note that the code below is ready to loop over a folder containing several videos ! </p>
+<p>There are also some little tricks to maintain the usage of ram low so that R doesn't crash </p>
+<pre><code class="language-r">reverse_videos &lt;- function(importpath, exportpath, thefps = 30){
+### this function will generate a reverse played version of a video
+### import path is the folder where the original videos are found;
+### export path is where you want to export the videos.
+### if not declared the thefps will default at 30.
+if (!require('magick')) install.packages('magick'); library('magick')## list videos in import folder
+vpaths &lt;- list.files(importpath, pattern = "mp4", full.names = TRUE)
+## extract the names
+vnames &lt;- basename(vpaths)
+for(v in seq_along(vpaths)){
+  gc()  ## clean up the ram before starting a new video
+  vidz &lt;- image_read_video(vpaths[v], fps = thefps) ## read up the video
+  image_write_video(rev(vidz), paste0(exportpath, "/", vnames[v]), framerate = thefps) ### write the rev video
+  rm(vidz) ## remove the video to free up space
+}
+}</code></pre>
+<p><b>That should do! You can also download this function from </b><a href="https://github.com/marco2gandolfo/rcourse/blob/main/reverse_videos.R"><b>here</b></a><b> </b></p>
+</main>
+<footer class="site-footer">
+  <a href="../../index.html"><img src="../../images/logo.png" alt="" width="22" height="22">Marco Gandolfo</a>
+</footer>
+
+</body>
+</html>

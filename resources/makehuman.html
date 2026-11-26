@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marco Gandolfo - MakeHuman Scripting</title>
+<meta name="description" content="Marco Gandolfo, Postdoc in Visual Cognitive Neuroscience. Donders Institute for Brain, Cognition and Behaviour, Radboud University of Nijmegen, NL.">
+<link rel="icon" type="image/png" href="../images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&amp;family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,700&amp;family=Source+Code+Pro:wght@400;600&amp;display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<div class="announce">
+  <span>Behavioral and causal evidence for object-based scene recognition in visual cortex (2026)</span>
+  <a class="btn" href="https://doi.org/10.64898/2026.06.29.735096">Preprint</a>
+</div>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="../index.html"><img src="../images/logo.png" alt="" width="30" height="30">Marco Gandolfo</a>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Open menu">
+    <label for="nav-toggle" class="nav-toggle-label" aria-hidden="true"><span></span></label>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="../news.html">News</a></li>
+<li><a href="../publications.html">Publications</a></li>
+<li><a href="../cv.html">CV</a></li>
+<li class="has-sub"><a href="../resources/index.html" class="current">Resources</a>
+  <ul class="sub">
+    <li><a href="../resources/makehuman.html">MakeHuman Scripting</a></li>
+    <li><a href="../resources/R/index.html">R</a></li>
+    <li class="lvl2"><a href="../resources/R/rtutorials.html">RTutorials</a></li>
+    <li class="lvl2"><a href="../resources/R/r-functions-collection.html">R functions - collection</a></li>
+    <li class="lvl2"><a href="../resources/R/sdt.html">Dprime and SDT</a></li>
+    <li class="lvl2"><a href="../resources/R/outliers.html">Outliers</a></li>
+    <li class="lvl2"><a href="../resources/R/image-processing-in-r.html">Image processing in R</a></li>
+    <li class="lvl2"><a href="../resources/R/auroc2r-metacognitive-sensitivity.html">AUROC2R - Metacognitive Sensitivity</a></li>
+    <li class="lvl2"><a href="../resources/R/visualise-fft-spectra.html">Visualise FFT spectra</a></li>
+    <li class="lvl2"><a href="../resources/R/video-processing-in-r.html">Video Processing in R</a></li>
+    <li><a href="../resources/basics-of-tms.html">Basics of TMS</a></li>
+    <li><a href="../resources/stimuli.html">Stimuli</a></li>
+  </ul>
+</li>
+<li class="has-sub"><a href="../online-experiments/index.html">Online Experiments</a>
+  <ul class="sub">
+    <li><a href="../online-experiments/boundary-extension-and-depth-of-field.html">Boundary Extension and Depth of field</a></li>
+  </ul>
+</li>
+<li><a href="../contact-me.html">Contact me</a></li>
+</ul>
+    </nav>
+  </div>
+</header>
+<div class="banner">
+  <h1>Makehuman Scripting</h1>
+</div>
+<main id="main" class="content">
+<h2>Generate 520 characters in MakeHuman using the scripting plugin</h2>
+<p>The following script is written in Python and uses functions built-in <a href="http://www.makehumancommunity.org">Makehuman</a> software.</p>
+<p>It generates 520 female bodies (130 for each femininity step from 0 to 0.3) with random muscles weight hip circum and WHR. It writes on a .txt file the parameters assigned to each character. </p>
+<p>To use it you have to load in the plugin for scripting within makehuman and have downloaded the mhapi for developers from here ( <a href="https://github.com/makehumancommunity/community-plugins-mhapi">https://github.com/makehumancommunity/community-plugins-mhapi</a> )</p>
+<pre><code class="language-python">#import useful libraries, if you don't have them install them with pip
+import sys
+import bvh
+sys.path.append(G.app.mhapi.locations.getInstallationPath()+'/plugins/4_rendering_opengl')
+
+import mh2opengl
+import gui3d
+import numpy as np
+import random
+
+global bvh
+global mh2opengl
+global gui3d
+global posedir
+global human
+global bodyZones
+global MHScript
+
+#set the camera in a frontal position
+G.app.modelCamera.setHorizontalRotation(0)
+G.app.modelCamera.setVerticalInclination(5.0)
+G.app.modelCamera.setPosition([0.15, 0.05, 0.0])
+G.app.modelCamera.setZoomFactor(1.1)
+
+#make sure this path corresponds with the folder with the poses in makehuman installation #folder
+posedir = "/Applications/MakeHuman.app/Contents/Resources/data/poses/"
+human = G.app.selectedHuman
+global settings
+
+settings = dict()
+settings['scene'] = G.app.scene
+settings['AA'] = True
+settings['dimensions'] = (800, 800)
+settings['lightmapSSS'] = False
+
+#create vectors for modifiers with the values you want them to assume
+random.seed(0)  # set random seed to 0 [for reproducibility]
+
+rand_wheel_value = [ 0.1,0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,0.9] #generates a vector with distinct decimal values
+
+rand_wheel_muscle = [ 0.1,0.2, 0.3, 0.4, 0.5, 0.6]
+
+rand_wheel_weight = [ 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 ]
+
+rand_wheel_breast = [0.6, 0.7, 0.8, 0.9, 1.0]
+
+#get the modifier for waist to hip ratio #vary from -1 to 1
+WHR_mod = human.getModifier('measure/measure-waisttohip-dist-decr|incr')
+
+#get the modifier for hips circumference #vary from -1 to 1
+hips_mod = human.getModifier('measure/measure-hips-circ-decr|incr')
+
+rand_wheel_WHR = [-0.6,-0.5, -0.4, - 0.3, -0.2, -0.1, 0]
+
+rand_wheel_hips = [0, 0.1,0.2,0.3,0.4,0.5]
+
+#image = "image"
+pose = "standing02"
+
+#open and create a .txt file where you will store the parameters
+f= open("/Users/ciao/Documents/MakeHuman/v1/render/female_render/female_models_parameters.txt","a+")
+#insert your path above
+
+bvh_file=bvh.load(posedir + pose + ".bvh", "auto")
+
+#loop 130 times 4 intervals of femininity from 0 very feminine to 0.3 (1 is very masculine, #0.5 is androgynous)
+
+sex = 0
+i = 0
+for i in range(1,131):
+  for sex in np.arange(0,0.4,0.1):
+
+
+  anim=bvh_file.createAnimationTrack(human.getBaseSkeleton())
+  human.addAnimation(anim)
+  human.setActiveAnimation(anim.name)
+  human.setToFrame(0,update=False)
+  human.setPosed(True)
+  human.setGender(sex)
+
+  #select a random number from vector above, to insert into the for loop
+  human.setMuscle(random.choice(rand_wheel_muscle))
+  human.setWeight(random.choice(rand_wheel_weight))
+  human.setBodyProportions(random.choice(rand_wheel_value))
+  human.setBreastSize(random.choice(rand_wheel_breast))
+  human.setBreastFirmness(random.choice(rand_wheel_value))
+  human.setAge(random.uniform(0.6,0.8))
+  human.setHeight(0.6)
+  WHR_mod.setValue(random.choice(rand_wheel_WHR))
+  hips_mod.setValue(random.choice(rand_wheel_hips))
+  human.applyAllTargets()
+
+  # Render.
+  mh2opengl.Render(settings)
+  # Save.
+  filename = mh.getPath('render/female_render') + '/' + 'F' + str(sex) + '_' + str(i) +  '.png'
+  gui3d.app.getCategory('Rendering').getTaskByName('Viewer').image.save(filename)
+
+#write on the .txt file the parameters
+  f.write("muscle %.3f\r\n" % human.getMuscle() + "sex %.3f\r\n" % human.getGender() + "bodyprop %.3f\r\n" % human.getBodyProportions() + "weight %.3f\r\n" % human.getWeight() + "age %.3f\r\n" % human.getAge()   + "bodyno%d\r\n" % (i))
+
+  i = i + 1
+
+f.close()</code></pre>
+</main>
+<footer class="site-footer">
+  <a href="../index.html"><img src="../images/logo.png" alt="" width="22" height="22">Marco Gandolfo</a>
+</footer>
+
+</body>
+</html>
