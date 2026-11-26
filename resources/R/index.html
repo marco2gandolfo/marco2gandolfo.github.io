@@ -5,60 +5,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Marco Gandolfo - R</title>
 <meta name="description" content="Marco Gandolfo, Postdoc in Visual Cognitive Neuroscience. Donders Institute for Brain, Cognition and Behaviour, Radboud University of Nijmegen, NL.">
+<meta name="theme-color" content="#1b1e2a">
 <link rel="icon" type="image/png" href="../../images/logo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&amp;family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,700&amp;family=Source+Code+Pro:wght@400;600&amp;display=swap">
+<link rel="preload" href="../../assets/fonts/instrument-sans-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../assets/fonts/newsreader-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../assets/style.css">
 </head>
-<body>
+<body class="is-inner page-r">
 <a class="skip" href="#main">Skip to main content</a>
 <div class="announce">
-  <span>Behavioral and causal evidence for object-based scene recognition in visual cortex (2026)</span>
-  <a class="btn" href="https://doi.org/10.64898/2026.06.29.735096">Preprint</a>
+  <a href="https://doi.org/10.64898/2026.06.29.735096"><span class="announce-text">Behavioral and causal evidence for object-based scene recognition in visual cortex (2026)</span><span class="announce-btn">Preprint</span></a>
 </div>
-<header class="site-header">
-  <div class="header-inner">
-    <a class="brand" href="../../index.html"><img src="../../images/logo.png" alt="" width="30" height="30">Marco Gandolfo</a>
-    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Open menu">
-    <label for="nav-toggle" class="nav-toggle-label" aria-hidden="true"><span></span></label>
-    <nav class="site-nav" aria-label="Main">
-      <ul>
-<li><a href="../../index.html">Home</a></li>
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="../../index.html"><img src="../../images/logo.png" alt="" width="36" height="36"><span>Marco Gandolfo</span></a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu"><span class="menu-icon" aria-hidden="true"></span><span class="sr">Menu</span></button>
+    <nav id="menu" aria-label="Main">
+      <ul class="menu"><li><a href="../../index.html">Home</a></li>
 <li><a href="../../news.html">News</a></li>
 <li><a href="../../publications.html">Publications</a></li>
 <li><a href="../../cv.html">CV</a></li>
-<li class="has-sub"><a href="../../resources/index.html" class="current">Resources</a>
-  <ul class="sub">
-    <li><a href="../../resources/makehuman.html">MakeHuman Scripting</a></li>
-    <li><a href="../../resources/R/index.html">R</a></li>
-    <li class="lvl2"><a href="../../resources/R/rtutorials.html">RTutorials</a></li>
-    <li class="lvl2"><a href="../../resources/R/r-functions-collection.html">R functions - collection</a></li>
-    <li class="lvl2"><a href="../../resources/R/sdt.html">Dprime and SDT</a></li>
-    <li class="lvl2"><a href="../../resources/R/outliers.html">Outliers</a></li>
-    <li class="lvl2"><a href="../../resources/R/image-processing-in-r.html">Image processing in R</a></li>
-    <li class="lvl2"><a href="../../resources/R/auroc2r-metacognitive-sensitivity.html">AUROC2R - Metacognitive Sensitivity</a></li>
-    <li class="lvl2"><a href="../../resources/R/visualise-fft-spectra.html">Visualise FFT spectra</a></li>
-    <li class="lvl2"><a href="../../resources/R/video-processing-in-r.html">Video Processing in R</a></li>
-    <li><a href="../../resources/basics-of-tms.html">Basics of TMS</a></li>
-    <li><a href="../../resources/stimuli.html">Stimuli</a></li>
-  </ul>
-</li>
-<li class="has-sub"><a href="../../online-experiments/index.html">Online Experiments</a>
-  <ul class="sub">
-    <li><a href="../../online-experiments/boundary-extension-and-depth-of-field.html">Boundary Extension and Depth of field</a></li>
-  </ul>
-</li>
-<li><a href="../../contact-me.html">Contact me</a></li>
-</ul>
+<li class="has-sub"><a href="../../resources/index.html" class="is-current">Resources</a><ul class="sub"><li class="lvl1"><a href="../../resources/makehuman.html">MakeHuman Scripting</a></li><li class="lvl1"><a href="../../resources/R/index.html" aria-current="page">R</a></li><li class="lvl2"><a href="../../resources/R/rtutorials.html">RTutorials</a></li><li class="lvl2"><a href="../../resources/R/r-functions-collection.html">R functions - collection</a></li><li class="lvl2"><a href="../../resources/R/sdt.html">Dprime and SDT</a></li><li class="lvl2"><a href="../../resources/R/outliers.html">Outliers</a></li><li class="lvl2"><a href="../../resources/R/image-processing-in-r.html">Image processing in R</a></li><li class="lvl2"><a href="../../resources/R/auroc2r-metacognitive-sensitivity.html">AUROC2R - Metacognitive Sensitivity</a></li><li class="lvl2"><a href="../../resources/R/visualise-fft-spectra.html">Visualise FFT spectra</a></li><li class="lvl2"><a href="../../resources/R/video-processing-in-r.html">Video Processing in R</a></li><li class="lvl1"><a href="../../resources/basics-of-tms.html">Basics of TMS</a></li><li class="lvl1"><a href="../../resources/stimuli.html">Stimuli</a></li></ul></li>
+<li class="has-sub"><a href="../../online-experiments/index.html">Online Experiments</a><ul class="sub"><li class="lvl1"><a href="../../online-experiments/boundary-extension-and-depth-of-field.html">Boundary Extension and Depth of field</a></li></ul></li>
+<li><a href="../../contact-me.html">Contact me</a></li></ul>
     </nav>
   </div>
 </header>
-<div class="banner">
-  <h1>R tutorials and code</h1>
-</div>
-<main id="main" class="content">
-<ul class="link-cards">
+<header class="page-head">
+  <div class="page-head-inner">
+    <p class="crumbs"><a href="../../resources/index.html">Resources</a></p>
+    <h1>R tutorials and code</h1>
+  </div>
+  <div class="mini-bokeh" aria-hidden="true">
+    <span class="disc" style="--x:30%;--y:55%;--s:150px;--c:var(--oxide);--b:0px"></span>
+    <span class="disc" style="--x:62%;--y:35%;--s:110px;--c:var(--lagoon);--b:6px"></span>
+    <span class="disc" style="--x:80%;--y:72%;--s:70px;--c:var(--ochre);--b:14px"></span>
+  </div>
+</header>
+<main id="main">
+<div class="layout has-rail"><nav class="rail rail-section" aria-label="Resources"><ul><li class="lvl1"><a href="../../resources/makehuman.html">MakeHuman Scripting</a></li><li class="lvl1"><a href="../../resources/R/index.html" aria-current="page">R</a></li><li class="lvl2"><a href="../../resources/R/rtutorials.html">RTutorials</a></li><li class="lvl2"><a href="../../resources/R/r-functions-collection.html">R functions - collection</a></li><li class="lvl2"><a href="../../resources/R/sdt.html">Dprime and SDT</a></li><li class="lvl2"><a href="../../resources/R/outliers.html">Outliers</a></li><li class="lvl2"><a href="../../resources/R/image-processing-in-r.html">Image processing in R</a></li><li class="lvl2"><a href="../../resources/R/auroc2r-metacognitive-sensitivity.html">AUROC2R - Metacognitive Sensitivity</a></li><li class="lvl2"><a href="../../resources/R/visualise-fft-spectra.html">Visualise FFT spectra</a></li><li class="lvl2"><a href="../../resources/R/video-processing-in-r.html">Video Processing in R</a></li><li class="lvl1"><a href="../../resources/basics-of-tms.html">Basics of TMS</a></li><li class="lvl1"><a href="../../resources/stimuli.html">Stimuli</a></li></ul></nav><div class="prose page-r"><ul class="link-cards">
 <li><a href="../../resources/R/rtutorials.html">Rtutorials</a></li>
 <li><a href="../../resources/R/r-functions-collection.html">RFunctions</a></li>
 <li><a href="../../resources/R/sdt.html">Signal Detection Theory</a></li>
@@ -66,11 +51,15 @@
 <li><a href="../../resources/R/image-processing-in-r.html">Image Processing in R</a></li>
 <li><a href="../../resources/R/auroc2r-metacognitive-sensitivity.html">Auroc2 - Metacognitive Sensitivity</a></li>
 <li><a href="../../resources/R/video-processing-in-r.html">Video Processing in R</a></li>
-</ul>
+</ul></div></div>
 </main>
-<footer class="site-footer">
-  <a href="../../index.html"><img src="../../images/logo.png" alt="" width="22" height="22">Marco Gandolfo</a>
+<footer class="foot">
+  <div class="foot-inner">
+    <a class="foot-brand" href="../../index.html"><img src="../../images/logo.png" alt="" width="48" height="48"><span>Marco Gandolfo</span></a>
+    <ul class="foot-links"><li><a href="https://scholar.google.co.uk/citations?user=kLdjPXIAAAAJ&amp;hl=en">Google Scholar</a></li><li><a href="http://www.peelenlab.nl">Peelen Lab Page</a></li><li><a href="https://twitter.com/Marco_Gandolfo">@Twitter</a></li><li><a href="https://www.researchgate.net/profile/Marco_Gandolfo">Researchgate</a></li><li><a href="https://www.linkedin.com/in/gandolfom/">LinkedIn</a></li><li><a href="https://orcid.org/0000-0003-1505-3191">ORCID ID</a></li><li><a href="https://github.com/marco2gandolfo/rforpsychologists">Github</a></li><li><a href="https://osf.io/5r7ke/">Open Science Framework</a></li></ul>
+  </div>
 </footer>
+<script src="../../assets/site.js" defer></script>
 
 </body>
 </html>

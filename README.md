@@ -8,7 +8,9 @@ Plain HTML and CSS, with no build step: GitHub serves the files as they are.
 - `index.html`, `news.html`, `publications.html`, `cv.html`, `contact-me.html`: the main pages
 - `resources/`: MakeHuman, R tutorials and functions, Basics of TMS, Stimuli
 - `online-experiments/`: Boundary Extension and Depth of field
-- `assets/style.css`: all styling (colours are set at the top of the file)
+- `assets/style.css`: all styling (colours and fonts are set at the top of the file)
+- `assets/site.js`: the focus effect on the home page circles, the mobile menu and the year index
+- `assets/fonts/`: Syne (your name), Instrument Sans (titles and menus), Newsreader (text) and JetBrains Mono (code), all open font licence, hosted with the site
 - `images/`: pictures used on the pages
 - `get_images.command`: run once to download the images from the old Google Site
 
@@ -24,7 +26,10 @@ Plain HTML and CSS, with no build step: GitHub serves the files as they are.
 ## Editing
 
 - Add a news item: open `news.html` and copy one `<article class="news-item">` block
-  to the top of the list.
+  to the top of its year. For a new year, copy a whole `<section class="year">` block and add
+  the year to the list near the top of the page.
 - Add a publication: open `publications.html` and copy one `<div class="pub">` block.
+- Update the CV: open `cv.html`. Each job or degree is one `<li class="tl">` block in the timeline;
+  grants, talks and the other sections are plain lists you can copy a line from.
 - The menu is repeated at the top of every page. If you add a new page,
   copy an existing page in the same folder and change its content.
